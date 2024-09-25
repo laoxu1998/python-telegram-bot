@@ -1,0 +1,139 @@
+import logging
+from telegram import Update
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+
+# 配置日志
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+logger = logging.getLogger(__name__)
+
+# 定义机器人API Token
+TOKEN = "7289484401:AAEap4K7VMwEWdg0X3a3zdCpKq-iwsMvdpw"
+
+# 处理 /start 命令
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    user = update.effective_user
+    await update.message.reply_html(
+        rf"Hi {user.mention_html()}! 欢迎使用 365体育管理机器人！"
+    )
+
+# 处理 /status 命令，返回当前的状态
+async def status(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    bot_info = await context.bot.get_me()
+    status_message = f"机器人用户名: {bot_info.username}\n"
+    status_message += f"是否可以加入群组: {bot_info.can_join_groups}\n"
+    status_message += f"是否可以阅读所有群组消息: {bot_info.can_read_all_group_messages}\n"
+    status_message += f"是否支持内联查询: {bot_info.supports_inline_queries}\n"
+    await update.message.reply_text(status_message)
+
+# 处理管理员命令，踢出成员
+async def kick(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if update.message.chat.type in ['group', 'supergroup']:
+        if update.message.reply_to_message:
+            user_to_kick = update.message.reply_to_message.from_user
+            await context.bot.ban_chat_member(update.message.chat_id, user_to_kick.id)
+            await update.message.reply_text(f"用户 {user_to_kick.first_name} 已被踢出群组。")
+        else:
+            await update.message.reply_text("请回复需要踢出的用户的消息。")
+    else:
+        await update.message.reply_text("此命令仅在群组中可用。")
+
+# 处理未知命令
+async def unknown(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text("抱歉，我无法理解此命令。")
+
+# 主程序
+async def main() -> None:
+    # 创建应用实例
+    application = Application.builder().token(TOKEN).build()
+
+    # 添加命令处理器
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("status", status))
+    application.add_handler(CommandHandler("kick", kick))
+    application.add_handler(MessageHandler(filters.COMMAND, unknown))
+
+    # 启动轮询模式
+    await application.run_polling()
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())    
+
+
+
+
+
+
+
+
+
+
+
+import logging
+from telegram import Update
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+
+# 配置日志
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+logger = logging.getLogger(__name__)
+
+# 定义机器人API Token
+TOKEN = "7289484401:AAEap4K7VMwEWdg0X3a3zdCpKq-iwsMvdpw"
+
+# 处理 /start 命令
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    user = update.effective_user
+    await update.message.reply_html(
+        rf"Hi {user.mention_html()}! 欢迎使用 365体育管理机器人！"
+    )
+
+# 处理 /status 命令，返回当前的状态
+async def status(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    bot_info = await context.bot.get_me()
+    status_message = f"机器人用户名: {bot_info.username}\n"
+    status_message += f"是否可以加入群组: {bot_info.can_join_groups}\n"
+    status_message += f"是否可以阅读所有群组消息: {bot_info.can_read_all_group_messages}\n"
+    status_message += f"是否支持内联查询: {bot_info.supports_inline_queries}\n"
+    await update.message.reply_text(status_message)
+
+# 处理管理员命令，踢出成员
+async def kick(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if update.message.chat.type in ['group', 'supergroup']:
+        if update.message.reply_to_message:
+            user_to_kick = update.message.reply_to_message.from_user
+            await context.bot.ban_chat_member(update.message.chat_id, user_to_kick.id)
+            await update.message.reply_text(f"用户 {user_to_kick.first_name} 已被踢出群组。")
+        else:
+            await update.message.reply_text("请回复需要踢出的用户的消息。")
+    else:
+        await update.message.reply_text("此命令仅在群组中可用。")
+
+# 处理未知命令
+async def unknown(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text("抱歉，我无法理解此命令。")
+
+# 主程序
+async def main() -> None:
+    # 创建应用实例
+    application = Application.builder().token(TOKEN).build()
+
+    # 添加命令处理器
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("status", status))
+    application.add_handler(CommandHandler("kick", kick))
+    application.add_handler(MessageHandler(filters.COMMAND, unknown))
+
+    # 启动轮询模式
+    await application.run_polling()
+
+if __name__ == "__main__":
+    import asyncio
+    asyncio.run(main())
+
+
